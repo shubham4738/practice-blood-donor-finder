@@ -1,0 +1,6 @@
+{
+  "name": "Blood Donor Finder",
+  "description": "Find and connect with verified voluntary blood donors near you during urgent shortages and clinical procedures.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

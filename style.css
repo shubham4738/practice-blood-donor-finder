@@ -1,0 +1,217 @@
+/* ==========================================================================
+   Blood Donor Finder - Clinical Vitality Stylesheet
+   ========================================================================== */
+
+:root {
+  --primary: #b70011;
+  --primary-hover: #93000b;
+  --primary-container: #dc2626;
+  --on-primary-container: #fff6f5;
+  --surface: #faf8ff;
+  --surface-container-lowest: #ffffff;
+  --surface-container-low: #f2f3ff;
+  --surface-container: #eaedff;
+  --surface-container-high: #e2e7ff;
+  --on-surface: #131b2e;
+  --on-surface-variant: #5c403c;
+  --secondary-container: #f7dcde;
+  --secondary-fixed: #f7dcde;
+  --tertiary: #006645;
+  --tertiary-container: #008259;
+  --on-tertiary-container: #e1ffec;
+  --error: #ba1a1a;
+  --error-container: #ffdad6;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+  background-color: var(--surface);
+  color: var(--on-surface);
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Modals backdrop & transitions */
+.modal-overlay {
+  transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.25s;
+}
+.modal-overlay.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.modal-overlay:not(.hidden) {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.modal-content {
+  transform: scale(0.95) translateY(10px);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s;
+  opacity: 0;
+}
+.modal-overlay:not(.hidden) .modal-content {
+  transform: scale(1) translateY(0);
+  opacity: 1;
+}
+
+/* Toast Container */
+#toastContainer {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.toast {
+  pointer-events: auto;
+  min-width: 280px;
+  max-width: 420px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #131b2e;
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.15), 0 8px 10px -6px rgba(15, 23, 42, 0.1);
+  border: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  animation: toastSlideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transition: all 0.25s;
+}
+
+.toast.success {
+  border-left: 4px solid #10b981;
+}
+
+.toast.error {
+  border-left: 4px solid #dc2626;
+}
+
+.toast.info {
+  border-left: 4px solid #2563eb;
+}
+
+@keyframes toastSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Donor Card Styling & Hover */
+.donor-card {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+}
+.donor-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 24px -6px rgba(15, 23, 42, 0.08);
+}
+
+/* User's own card highlight */
+.donor-card.is-current-user {
+  border: 2px solid #dc2626;
+  background: linear-gradient(180deg, #fffafa 0%, #ffffff 100%);
+}
+
+/* Pill Toggle Switch */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+}
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #cbd5e1;
+  transition: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 24px;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+input:checked + .slider {
+  background-color: #008259;
+}
+input:checked + .slider:before {
+  transform: translateX(20px);
+}
+
+/* Interactive Pill Navigation */
+.urgency-pill.active-pill {
+  background-color: #f7dcde;
+  color: #b70011;
+  font-weight: 700;
+}
+
+/* Pulse Beacon */
+@keyframes beaconPulse {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 8px rgba(220, 38, 38, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0);
+  }
+}
+.beacon-dot {
+  animation: beaconPulse 2s infinite;
+}

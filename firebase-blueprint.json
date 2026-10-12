@@ -1,0 +1,68 @@
+{
+  "entities": {
+    "Donor": {
+      "title": "Donor",
+      "description": "Registered voluntary blood donor profile linked with user UID",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Full name of the donor",
+          "maxLength": 100
+        },
+        "age": {
+          "type": "number",
+          "description": "Age of the donor (min 18)"
+        },
+        "bloodGroup": {
+          "type": "string",
+          "description": "Blood group of donor",
+          "enum": ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"]
+        },
+        "city": {
+          "type": "string",
+          "description": "City and state/region of donor",
+          "maxLength": 100
+        },
+        "phoneNumber": {
+          "type": "string",
+          "description": "Direct contact phone number",
+          "maxLength": 25
+        },
+        "isAvailable": {
+          "type": "boolean",
+          "description": "Whether the donor is currently active and available"
+        },
+        "userId": {
+          "type": "string",
+          "description": "Firebase Auth user UID",
+          "maxLength": 128
+        },
+        "userEmail": {
+          "type": "string",
+          "description": "Email address of the donor",
+          "maxLength": 128
+        },
+        "donationsCount": {
+          "type": "number",
+          "description": "Number of completed donations"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "ISO timestamp or server timestamp of creation"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "ISO timestamp or server timestamp of last update"
+        }
+      },
+      "required": ["name", "age", "bloodGroup", "city", "phoneNumber", "isAvailable", "userId"]
+    }
+  },
+  "firestore": {
+    "/donors/{donorId}": {
+      "schema": "Donor",
+      "description": "Public directory of registered voluntary blood donors for emergency contact and patient matching"
+    }
+  }
+}

@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blood Donor Finder - Find Donors Near You & Save a Life</title>
+  <meta name="description" content="Connect directly with verified voluntary blood donors across your city during urgent clinical shortages and emergency procedures. 100% free and peer-to-peer." />
+  <meta property="og:title" content="Blood Donor Finder" />
+  <meta property="og:description" content="Find and connect with verified voluntary blood donors near you during urgent shortages and clinical procedures." />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Material Symbols Outlined -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS Play CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#b70011",
+            "primary-hover": "#93000b",
+            "primary-container": "#dc2626",
+            "on-primary-container": "#fff6f5",
+            "secondary": "#6d5a5b",
+            "secondary-container": "#f7dcde",
+            "on-secondary-container": "#735f61",
+            "secondary-fixed": "#f7dcde",
+            "tertiary": "#006645",
+            "tertiary-container": "#008259",
+            "on-tertiary-container": "#e1ffec",
+            "tertiary-fixed": "#6ffbbe",
+            "on-tertiary-fixed-variant": "#005236",
+            "surface": "#faf8ff",
+            "surface-low": "#f2f3ff",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low": "#f2f3ff",
+            "surface-container": "#eaedff",
+            "surface-container-high": "#e2e7ff",
+            "on-surface": "#131b2e",
+            "on-surface-variant": "#5c403c",
+            "error": "#ba1a1a",
+            "error-container": "#ffdad6",
+            "inverse-surface": "#283044"
+          },
+          fontFamily: {
+            sans: ["Inter", "sans-serif"],
+            "headline-xl": ["Inter", "sans-serif"],
+            "headline-lg": ["Inter", "sans-serif"],
+            "headline-md": ["Inter", "sans-serif"],
+            "headline-sm": ["Inter", "sans-serif"],
+            "body-lg": ["Inter", "sans-serif"],
+            "body-md": ["Inter", "sans-serif"],
+            "body-sm": ["Inter", "sans-serif"],
+            "label-lg": ["Inter", "sans-serif"],
+            "label-md": ["Inter", "sans-serif"],
+            "label-sm": ["Inter", "sans-serif"]
+          },
+          fontSize: {
+            "headline-xl": ["40px", { lineHeight: "48px", letterSpacing: "-0.02em", fontWeight: "700" }],
+            "headline-lg": ["30px", { lineHeight: "38px", letterSpacing: "-0.015em", fontWeight: "700" }],
+            "headline-md": ["22px", { lineHeight: "28px", letterSpacing: "-0.01em", fontWeight: "600" }],
+            "headline-sm": ["18px", { lineHeight: "24px", fontWeight: "600" }],
+            "body-lg": ["18px", { lineHeight: "28px", fontWeight: "400" }],
+            "body-md": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+            "body-sm": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+            "label-lg": ["14px", { lineHeight: "20px", letterSpacing: "0.01em", fontWeight: "600" }],
+            "label-md": ["12px", { lineHeight: "16px", letterSpacing: "0.02em", fontWeight: "600" }],
+            "label-sm": ["11px", { lineHeight: "14px", letterSpacing: "0.04em", fontWeight: "700" }]
+          },
+          spacing: {
+            gutter: "1.5rem",
+            "space-xs": "0.25rem",
+            "space-sm": "0.5rem",
+            "space-md": "1rem",
+            "space-lg": "1.5rem",
+            "space-xl": "2.5rem"
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- Application Stylesheet -->
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body class="bg-surface font-body-md text-body-md text-on-surface antialiased min-h-screen flex flex-col">
+
+  <!-- ========================================================================
+       Top Navigation Bar
+       ======================================================================== -->
+  <header class="fixed top-0 left-0 right-0 z-50 bg-surface-container-lowest/95 backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
+    <div class="h-16 w-full px-gutter flex items-center justify-between">
+      
+      <!-- Brand & Navigation Links -->
+      <div class="flex items-center gap-space-lg">
+        <a class="flex items-center gap-space-sm" href="#">
+          <div class="w-9 h-9 rounded-xl bg-primary flex items-center justify-center text-white shadow-sm">
+            <span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">water_drop</span>
+          </div>
+          <span class="font-headline-sm text-headline-sm text-on-surface tracking-tight font-bold">Blood Donor Finder</span>
+        </a>
+
+        <nav class="hidden lg:flex items-center gap-space-xs">
+          <a class="px-space-md py-space-sm font-label-lg transition-colors bg-secondary-container text-on-secondary-container rounded-lg font-semibold" href="#availableDonorsSection">
+            Find Donors
+          </a>
+          <button class="px-space-md py-space-sm font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors rounded-lg text-left" onclick="window.handleRegisterClick()">
+            Register as Donor
+          </button>
+          <button class="px-space-md py-space-sm font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors rounded-lg text-left" onclick="window.openModal('bloodBanksModal')">
+            Blood Banks
+          </button>
+          <button class="px-space-md py-space-sm font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors rounded-lg text-left" onclick="window.openModal('emergencyModal')">
+            Emergency Requests
+          </button>
+        </nav>
+      </div>
+
+      <!-- Auth & Donor Status Header Area -->
+      <div class="flex items-center gap-space-md">
+        
+        <!-- Logged-In Donor Profile Badge & Live Availability Toggle -->
+        <div id="donorProfileBadgeWrapper" class="hidden flex items-center gap-space-xs">
+          <button class="flex items-center gap-space-xs px-space-md py-space-sm rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface transition-colors border border-slate-200" onclick="window.openDonorProfileModal()" title="View and edit your donor profile">
+            <span class="font-label-lg text-label-lg font-medium">Donor Profile</span>
+            <span id="donorBadgeStatusText" class="px-space-xs py-0.5 rounded-full bg-secondary-container font-label-sm text-label-sm text-primary font-bold">
+              O+ Active
+            </span>
+          </button>
+          
+          <!-- One-click Quick Toggle in Header -->
+          <div class="hidden sm:flex items-center gap-1.5 pl-1 pr-2 py-1 bg-surface-container-low rounded-lg border border-slate-200" title="Quick toggle your live donation availability in Firestore">
+            <span class="text-[11px] font-semibold text-slate-500 uppercase">Available:</span>
+            <label class="switch">
+              <input type="checkbox" id="headerQuickToggle" checked onchange="window.toggleCurrentDonorAvailability(this.checked)">
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Logged In Controls (User Email & Logout) -->
+        <div id="loggedInNav" class="hidden flex items-center gap-space-sm">
+          <div class="hidden sm:flex flex-col text-right">
+            <span id="userEmailDisplay" class="font-label-sm text-label-sm text-on-surface font-semibold max-w-[170px] truncate">
+              user@example.com
+            </span>
+            <span class="text-[10px] text-tertiary-container font-medium flex items-center justify-end gap-0.5">
+              <span class="w-1.5 h-1.5 rounded-full bg-tertiary-container"></span> Verified
+            </span>
+          </div>
+
+          <button class="px-3.5 py-2 rounded-lg border border-red-200 bg-red-50/60 hover:bg-red-100/80 text-primary font-label-lg text-label-lg transition-colors flex items-center gap-1" onclick="window.handleLogout()" title="Sign out of your account">
+            <span class="material-symbols-outlined text-[16px]">logout</span>
+            <span class="hidden md:inline">Logout</span>
+          </button>
+          
+          <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-bold cursor-pointer" onclick="window.openDonorProfileModal()" title="My Profile">
+            <span class="material-symbols-outlined text-[18px]">person</span>
+          </div>
+        </div>
+
+        <!-- Logged Out Controls (Login / Register Button) -->
+        <div id="loggedOutNav" class="flex items-center gap-space-sm">
+          <button class="inline-flex items-center justify-center px-space-lg py-space-sm rounded-lg bg-primary-container text-on-primary-container font-label-lg text-label-lg hover:bg-primary transition-colors shadow-sm" onclick="window.openModal('authModal')">
+            Login / Register
+          </button>
+          <div class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 cursor-pointer" onclick="window.openModal('authModal')">
+            <span class="material-symbols-outlined text-[18px]">person</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================================================
+       Main Content Container
+       ======================================================================== -->
+  <main class="w-full pt-16 flex-1 flex flex-col">
+
+    <!-- Priority Emergency Shortage Ticker Banner -->
+    <section class="w-full bg-error-container/60 px-gutter py-2.5 flex items-center justify-between border-b border-error-container">
+      <div class="flex items-center gap-space-sm">
+        <span class="flex h-2.5 w-2.5 relative">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary"></span>
+        </span>
+        <span class="font-label-sm text-label-sm uppercase tracking-wider text-primary font-bold">Priority Shortage Alert</span>
+        <span class="text-on-surface-variant font-body-sm text-body-sm hidden sm:inline">
+          • Immediate need for <strong class="text-primary font-bold">O-Negative &amp; B-Negative</strong> units at Mt. Sinai &amp; St. Jude Trauma Units
+        </span>
+      </div>
+      <div class="flex items-center gap-space-md">
+        <button class="font-label-sm text-label-sm text-primary hover:underline font-bold flex items-center gap-1" onclick="window.handleRegisterClick()">
+          Respond Now <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Hero & Quick Search Canvas -->
+    <section class="relative w-full px-gutter pt-space-xl pb-16 overflow-hidden bg-gradient-to-b from-surface via-surface-container-low/40 to-surface">
+      <!-- Ambient Glow Blobs -->
+      <div class="absolute -top-24 right-1/4 w-96 h-96 bg-primary-fixed/30 rounded-full blur-3xl pointer-events-none -z-10"></div>
+      <div class="absolute top-1/2 -left-20 w-80 h-80 bg-secondary-fixed/40 rounded-full blur-3xl pointer-events-none -z-10"></div>
+      
+      <div class="max-w-7xl mx-auto flex flex-col items-center text-center">
+        <!-- Clinical Registry Badge -->
+        <div class="inline-flex items-center gap-space-xs px-3.5 py-1.5 rounded-full bg-secondary-container text-on-secondary-container shadow-sm mb-space-md">
+          <span class="material-symbols-outlined text-[16px] text-primary" style="font-variation-settings: 'FILL' 1;">vital_signs</span>
+          <span class="font-label-md text-label-md tracking-wide font-medium">Real-Time Clinical Donor Registry</span>
+        </div>
+
+        <!-- Main Headline -->
+        <h1 class="font-headline-xl text-headline-xl text-on-surface tracking-tight max-w-4xl">
+          Find Blood Donors Near You, <span class="text-primary font-extrabold">Save a Life in Minutes</span>
+        </h1>
+        <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mt-space-sm mb-space-lg">
+          Connect directly with verified volunteer donors across your city during urgent clinical shortages and emergency procedures. 100% free and peer-to-peer.
+        </p>
+
+        <!-- Primary Floating Search & Filter Box -->
+        <div class="w-full max-w-4xl bg-surface-container-lowest rounded-xl shadow-xl p-space-md md:p-space-lg text-left relative z-20 border border-slate-200">
+          
+          <!-- Urgency Pills Row -->
+          <div class="flex items-center justify-between pb-space-md flex-wrap gap-space-sm">
+            <div class="flex items-center gap-space-xs" id="urgencyFilterGroup">
+              <button class="urgency-pill active-pill px-3 py-1.5 rounded-full bg-secondary-container text-primary font-label-md text-label-md font-bold transition-all" data-urgency="all" type="button">
+                All Donors
+              </button>
+              <button class="urgency-pill px-3 py-1.5 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-all" data-urgency="now" type="button">
+                <span class="inline-block w-2 h-2 rounded-full bg-tertiary mr-1"></span>Available Now
+              </button>
+              <button class="urgency-pill px-3 py-1.5 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-all" data-urgency="urgent" type="button">
+                Urgent / Immediate (Trauma)
+              </button>
+            </div>
+            
+            <span class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1 font-medium">
+              <span class="material-symbols-outlined text-[16px] text-tertiary">check_circle</span> 
+              <span>Real-time live matching active</span>
+            </span>
+          </div>
+
+          <!-- Search Filter Controls Form -->
+          <form class="grid grid-cols-1 md:grid-cols-12 gap-space-sm items-center" id="donorSearchForm" onsubmit="event.preventDefault(); window.triggerSearch();">
+            
+            <!-- Blood Group Dropdown -->
+            <div class="md:col-span-4 relative">
+              <label for="searchBloodGroup" class="block font-label-sm text-label-sm text-on-surface-variant mb-1 font-semibold uppercase tracking-wider">
+                Blood Group Required
+              </label>
+              <div class="relative flex items-center">
+                <span class="material-symbols-outlined absolute left-3 text-primary text-[20px] pointer-events-none" style="font-variation-settings: 'FILL' 1;">water_drop</span>
+                <select id="searchBloodGroup" class="w-full h-12 pl-10 pr-8 bg-surface-container-low text-on-surface font-label-lg text-label-lg rounded-lg focus:outline-none focus:ring-2 focus:ring-primary appearance-none cursor-pointer border border-slate-200">
+                  <option value="ALL">All Blood Groups (Compatibles)</option>
+                  <option value="O+">O+ (Positive)</option>
+                  <option value="O-">O- (Universal Donor)</option>
+                  <option value="A+">A+ (Positive)</option>
+                  <option value="A-">A- (Negative)</option>
+                  <option value="B+">B+ (Positive)</option>
+                  <option value="B-">B- (Negative)</option>
+                  <option value="AB+">AB+ (Universal Recipient)</option>
+                  <option value="AB-">AB- (Negative)</option>
+                </select>
+                <span class="material-symbols-outlined absolute right-3 text-on-surface-variant text-[20px] pointer-events-none">expand_more</span>
+              </div>
+            </div>
+
+            <!-- City or Hospital Area Input -->
+            <div class="md:col-span-5 relative">
+              <label for="searchLocation" class="block font-label-sm text-label-sm text-on-surface-variant mb-1 font-semibold uppercase tracking-wider">
+                City or Hospital Area
+              </label>
+              <div class="relative flex items-center">
+                <span class="material-symbols-outlined absolute left-3 text-on-surface-variant text-[20px] pointer-events-none">location_on</span>
+                <input id="searchLocation" class="w-full h-12 pl-10 pr-4 bg-surface-container-low text-on-surface font-body-md text-body-md rounded-lg focus:outline-none focus:ring-2 focus:ring-primary border border-slate-200" placeholder="e.g. New York, Brooklyn, Queens..." type="text" value="New York" />
+              </div>
+            </div>
+
+            <!-- Search Action CTA -->
+            <div class="md:col-span-3 flex flex-col justify-end">
+              <label class="hidden md:block font-label-sm text-label-sm text-transparent mb-1">Search</label>
+              <button class="w-full h-12 bg-primary-container hover:bg-primary text-on-primary-container font-label-lg text-label-lg rounded-lg shadow-md flex items-center justify-center gap-space-xs transition-all active:scale-[0.99] font-semibold" type="submit">
+                <span class="material-symbols-outlined text-[20px]">search</span>
+                <span>Search Donors</span>
+              </button>
+            </div>
+          </form>
+
+        </div>
+
+        <!-- Quick Stats Strip -->
+        <div class="w-full max-w-4xl grid grid-cols-2 md:grid-cols-4 gap-space-sm mt-space-lg">
+          <div class="p-space-sm rounded-lg bg-surface-container-low/70 border border-slate-200/60 flex items-center gap-space-sm text-left">
+            <div class="w-9 h-9 rounded-full bg-secondary-container flex items-center justify-center text-primary shrink-0">
+              <span class="material-symbols-outlined text-[20px]">group</span>
+            </div>
+            <div>
+              <div class="font-headline-sm text-headline-sm text-on-surface font-bold leading-tight">14,200+</div>
+              <div class="font-label-sm text-label-sm text-on-surface-variant">Registered Donors</div>
+            </div>
+          </div>
+
+          <div class="p-space-sm rounded-lg bg-surface-container-low/70 border border-slate-200/60 flex items-center gap-space-sm text-left">
+            <div class="w-9 h-9 rounded-full bg-secondary-container flex items-center justify-center text-primary shrink-0">
+              <span class="material-symbols-outlined text-[20px]">local_hospital</span>
+            </div>
+            <div>
+              <div class="font-headline-sm text-headline-sm text-on-surface font-bold leading-tight">850+</div>
+              <div class="font-label-sm text-label-sm text-on-surface-variant">Hospitals Linked</div>
+            </div>
+          </div>
+
+          <div class="p-space-sm rounded-lg bg-surface-container-low/70 border border-slate-200/60 flex items-center gap-space-sm text-left">
+            <div class="w-9 h-9 rounded-full bg-tertiary-fixed flex items-center justify-center text-on-tertiary-fixed-variant shrink-0">
+              <span class="material-symbols-outlined text-[20px]">timer</span>
+            </div>
+            <div>
+              <div class="font-headline-sm text-headline-sm text-on-surface font-bold leading-tight">4.2 Min</div>
+              <div class="font-label-sm text-label-sm text-on-surface-variant">Avg. Response Time</div>
+            </div>
+          </div>
+
+          <div class="p-space-sm rounded-lg bg-surface-container-low/70 border border-slate-200/60 flex items-center gap-space-sm text-left">
+            <div class="w-9 h-9 rounded-full bg-secondary-container flex items-center justify-center text-primary shrink-0">
+              <span class="material-symbols-outlined text-[20px]">handshake</span>
+            </div>
+            <div>
+              <div class="font-headline-sm text-headline-sm text-on-surface font-bold leading-tight">100% Free</div>
+              <div class="font-label-sm text-label-sm text-on-surface-variant">Direct Direct Reach</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         Donor Directory & Live Results Section
+         ======================================================================== -->
+    <section id="availableDonorsSection" class="w-full px-gutter py-space-lg max-w-7xl mx-auto flex-1">
+      
+      <!-- Section Header & Controls -->
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md mb-space-lg pb-space-sm border-b border-slate-200/80">
+        <div>
+          <div class="flex items-center gap-space-xs mb-1">
+            <span class="font-label-sm text-label-sm uppercase tracking-wider text-primary font-bold">Verified Network</span>
+            <span class="text-on-surface-variant text-label-sm font-medium">• Live Matching via Firestore</span>
+          </div>
+          <h2 class="font-headline-lg text-headline-lg text-on-surface font-bold">Available Donors</h2>
+          <p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5" id="resultsCountLabel">
+            Showing <span class="font-bold text-on-surface">6 active donors</span> located in New York, NY (Universal compatibility enabled)
+          </p>
+        </div>
+
+        <!-- Quick Action CTAs -->
+        <div class="flex items-center gap-space-xs">
+          <button class="px-space-md py-2.5 rounded-lg bg-primary-container text-on-primary-container font-label-lg text-label-lg hover:bg-primary shadow-sm flex items-center gap-space-xs transition-colors font-semibold" onclick="window.handleRegisterClick()">
+            <span class="material-symbols-outlined text-[18px]">volunteer_activism</span>
+            <span>Register as Donor</span>
+          </button>
+          
+          <button id="heroLoginActionBtn" class="px-space-md py-2.5 rounded-lg bg-surface-container-high text-on-surface font-label-lg text-label-lg hover:bg-surface-container transition-colors flex items-center gap-space-xs border border-slate-200" onclick="window.openModal('authModal')">
+            <span class="material-symbols-outlined text-[18px]">account_circle</span>
+            <span>Donor Login</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Donors Cards Grid Container -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-lg" id="donorCardsGrid">
+        <!-- Rendered dynamically by app.js from Firestore live snapshot -->
+      </div>
+
+      <!-- Emergency Compatibility Matrix Strip -->
+      <div class="mt-space-xl p-space-lg rounded-xl bg-surface-container-low shadow-sm flex flex-col md:flex-row items-center justify-between gap-space-lg border border-slate-200/80">
+        <div class="flex items-center gap-space-md">
+          <div class="w-12 h-12 rounded-xl bg-primary flex items-center justify-center text-white shrink-0">
+            <span class="material-symbols-outlined text-[26px]">info</span>
+          </div>
+          <div>
+            <h4 class="font-headline-sm text-headline-sm text-on-surface font-bold">Emergency Blood Compatibility Matrix</h4>
+            <p class="font-body-sm text-body-sm text-on-surface-variant max-w-xl text-slate-600">
+              O- can donate red cells to any group. AB+ can receive from any blood group. In severe trauma with unknown blood type, O-Negative units are dispatched immediately.
+            </p>
+          </div>
+        </div>
+        <div class="flex items-center gap-space-sm shrink-0">
+          <button class="px-space-lg py-2.5 rounded-lg bg-surface-container-lowest text-primary hover:bg-surface-container-high font-label-lg text-label-lg shadow-sm border border-slate-200 font-bold transition-colors" onclick="window.handleRegisterClick()">
+            Register Your Group
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ========================================================================
+       Interactive Modal 1: Register as Donor Modal
+       ======================================================================== -->
+  <div id="registerModal" class="modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4 bg-inverse-surface/60 backdrop-blur-sm hidden">
+    <div class="modal-content w-full max-w-xl bg-surface-container-lowest rounded-2xl shadow-2xl p-space-lg md:p-space-xl relative max-h-[90vh] overflow-y-auto border border-slate-200">
+      
+      <!-- Close Button -->
+      <button class="absolute top-4 right-4 w-9 h-9 rounded-full bg-surface-container hover:bg-surface-container-high flex items-center justify-center text-on-surface transition-colors" onclick="window.closeModal('registerModal')" aria-label="Close Modal">
+        <span class="material-symbols-outlined text-[20px]">close</span>
+      </button>
+
+      <!-- Header -->
+      <div class="flex items-center gap-space-sm mb-space-md">
+        <div class="w-11 h-11 rounded-xl bg-secondary-fixed flex items-center justify-center text-primary shrink-0">
+          <span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">volunteer_activism</span>
+        </div>
+        <div>
+          <h3 class="font-headline-md text-headline-md text-on-surface font-bold">Register as a Lifesaving Donor</h3>
+          <p class="font-body-sm text-body-sm text-on-surface-variant">Saves into Firestore collection 'donors' linked to your UID</p>
+        </div>
+      </div>
+
+      <!-- Registration Form -->
+      <form class="space-y-space-md" id="registrationForm" onsubmit="window.handleRegistration(event)">
+        
+        <!-- Full Legal Name -->
+        <div>
+          <label for="regName" class="block font-label-sm text-label-sm text-on-surface-variant mb-1 font-semibold uppercase">
+            Full Legal Name
+          </label>
+          <div class="relative flex items-center">
+            <span class="material-symbols-outlined absolute left-3 text-on-surface-variant text-[20px] pointer-events-none">person</span>
+            <input id="regName" class="w-full h-11 pl-10 pr-4 bg-surface-container-low text-on-surface font-body-md text-body-md rounded-lg focus:outline-none focus:ring-2 focus:ring-primary border border-slate-200" placeholder="e.g. Jordan Miller" required type="text" />
+          </div>
+        </div>
+
+        <!-- Age & Gender Grid -->
+        <div class="grid grid-cols-2 gap-space-md">
+          <div>
+            <label for="regAge" class="block font-label-sm text-label-sm text-on-surface-variant mb-1 font-semibold uppercase">
+              Age (Min 18)
+            </label>
+            <input id="regAge" class="w-full h-11 px-3 bg-surface-container-low text-on-surface font-body-md text-body-md rounded-lg focus:outline-none focus:ring-2 focus:ring-primary border border-slate-200" max="75" min="18" required type="number" value="26" />
+          </div>
+          <div>
+            <label for="regGender" class="block font-label-sm text-label-sm text-on-surface-variant mb-1 font-semibold uppercase">
+              Biological Sex
+            </label>
+            <select id="regGender" class="w-full h-11 px-3 bg-surface-container-low text-on-surface font-body-md text-body-md rounded-lg focus:outline-none focus:ring-2 focus:ring-primary border border-slate-200">
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Prefer not to say</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Blood Group & City Grid -->
+        <div class="grid grid-cols-2 gap-space-md">
+          <div>
+            <label for="regBloodGroup" class="block font-label-sm text-label-sm text-on-surface-variant mb-1 font-semibold uppercase">
+              Blood Group
+            </label>
+            <select id="regBloodGroup" class="w-full h-11 px-3 bg-surface-container-low text-on-surface font-label-lg text-label-lg rounded-lg focus:outline-none focus:ring-2 focus:ring-primary font-bold border border-slate-200" required>
+              <option value="O+">O+ (Positive)</option>
+              <option value="O-">O- (Universal Donor)</option>
+              <option value="A+">A+ (Positive)</option>
+              <option value="A-">A- (Negative)</option>
+              <option value="B+">B+ (Positive)</option>
+              <option value="B-">B- (Negative)</option>
+              <option value="AB+">AB+ (Positive)</option>
+              <option value="AB-">AB- (Negative)</option>
+            </select>
+          </div>
+          <div>
+            <label for="regCity" class="block font-label-sm text-label-sm text-on-surface-variant mb-1 font-semibold uppercase">
+              City &amp; Area
+            </label>
+            <input id="regCity" class="w-full h-11 px-3 bg-surface-container-low text-on-surface font-body-md text-body-md rounded-lg focus:outline-none focus:ring-2 focus:ring-primary border border-slate-200" placeholder="e.g. New York, Brooklyn" required type="text" value="New York, NY" />
+          </div>
+        </div>
+
+        <!-- Direct Phone Number -->
+        <div>
+          <label for="regPhone" class="block font-label-sm text-label-sm text-on-surface-variant mb-1 font-semibold uppercase">
+            Direct Phone Number (For Emergency SMS / Call)
+          </label>
+          <div class="relative flex items-center">
+            <span class="material-symbols-outlined absolute left-3 text-on-surface-variant text-[20px] pointer-events-none">phone</span>
+            <input id="regPhone" class="w-full h-11 pl-10 pr-4 bg-surface-container-low text-on-surface font-body-md text-body-md rounded-lg focus:outline-none focus:ring-2 focus:ring-primary border border-slate-200" placeholder="+1 (555) 234-5678" required type="tel" value="+1 (555) " />
+          </div>
+        </div>
+
+        <!-- Emergency Availability Toggle (Firestore isAvailable) -->
+        <div class="flex items-center justify-between p-space-sm bg-surface-container-low rounded-lg border border-slate-200">
+          <div>
+            <span class="block font-label-md text-label-md text-on-surface font-bold">Available for Emergency Dispatch</span>
+            <span class="font-body-sm text-body-sm text-on-surface-variant text-slate-500">Opt-in to be visible and contactable in the live directory</span>
+          </div>
+          <label class="switch">
+            <input id="emergencyToggle" type="checkbox" checked />
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <!-- Health Checklist Confirmation -->
+        <div class="flex items-start gap-space-xs pt-1">
+          <input id="healthConsent" class="mt-1 h-4 w-4 rounded accent-primary cursor-pointer" required type="checkbox" checked />
+          <label class="font-body-sm text-body-sm text-on-surface-variant cursor-pointer text-slate-600" for="healthConsent">
+            I confirm I weigh over 50kg, have not received a tattoo in the past 3 months, and feel healthy to donate.
+          </label>
+        </div>
+
+        <!-- Submit Button -->
+        <button class="w-full h-12 bg-primary-container hover:bg-primary text-on-primary-container font-label-lg text-label-lg rounded-lg shadow-md flex items-center justify-center gap-space-xs transition-colors font-bold" type="submit">
+          <span class="material-symbols-outlined text-[20px]">check</span>
+          <span>Save Donor Profile in Firestore</span>
+        </button>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       Interactive Modal 2: Auth Modal (Login & Sign Up)
+       ======================================================================== -->
+  <div id="authModal" class="modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4 bg-inverse-surface/60 backdrop-blur-sm hidden">
+    <div class="modal-content w-full max-w-md bg-surface-container-lowest rounded-2xl shadow-2xl p-space-lg md:p-space-xl relative border border-slate-200">
+      
+      <!-- Close Button -->
+      <button class="absolute top-4 right-4 w-9 h-9 rounded-full bg-surface-container hover:bg-surface-container-high flex items-center justify-center text-on-surface transition-colors" onclick="window.closeModal('authModal')" aria-label="Close Modal">
+        <span class="material-symbols-outlined text-[20px]">close</span>
+      </button>
+
+      <div class="flex flex-col text-center mb-space-md">
+        <div class="w-12 h-12 rounded-xl bg-secondary-fixed mx-auto mb-2 flex items-center justify-center text-primary">
+          <span class="material-symbols-outlined text-[26px]">lock</span>
+        </div>
+        <h3 id="authModalTitle" class="font-headline-md text-headline-md text-on-surface font-bold">Welcome Back</h3>
+        <p class="font-body-sm text-body-sm text-on-surface-variant text-slate-500">Firebase Authentication for Blood Donors</p>
+      </div>
+
+      <!-- Segmented Tab Header (Sign In vs Sign Up) -->
+      <div class="flex rounded-lg bg-surface-container-low p-1 mb-space-md border border-slate-200">
+        <button id="tabLoginBtn" class="flex-1 py-1.5 text-center font-label-md text-label-md rounded-md bg-surface-container-lowest text-on-surface shadow-xs font-bold transition-all" onclick="window.switchAuthTab('login')" type="button">
+          Sign In
+        </button>
+        <button id="tabSignupBtn" class="flex-1 py-1.5 text-center font-label-md text-label-md rounded-md text-on-surface-variant hover:text-on-surface transition-all" onclick="window.switchAuthTab('signup')" type="button">
+          Create Account
+        </button>
+      </div>
+
+      <!-- Form 1: Sign In -->
+      <form class="space-y-space-md" id="authLoginForm" onsubmit="window.handleLogin(event)">
+        <div>
+          <label for="loginEmailInput" class="block font-label-sm text-label-sm text-on-surface-variant mb-1 font-semibold uppercase">Email Address</label>
+          <div class="relative flex items-center">
+            <span class="material-symbols-outlined absolute left-3 text-on-surface-variant text-[20px] pointer-events-none">mail</span>
+            <input id="loginEmailInput" class="w-full h-11 pl-10 pr-4 bg-surface-container-low text-on-surface font-body-md text-body-md rounded-lg focus:outline-none focus:ring-2 focus:ring-primary border border-slate-200" placeholder="donor@hospital.org" required type="email" />
+          </div>
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <label for="loginPasswordInput" class="block font-label-sm text-label-sm text-on-surface-variant font-semibold uppercase">Password</label>
+            <span class="text-xs text-slate-400">Min 6 characters</span>
+          </div>
+          <div class="relative flex items-center">
+            <span class="material-symbols-outlined absolute left-3 text-on-surface-variant text-[20px] pointer-events-none">key</span>
+            <input id="loginPasswordInput" class="w-full h-11 pl-10 pr-10 bg-surface-container-low text-on-surface font-body-md text-body-md rounded-lg focus:outline-none focus:ring-2 focus:ring-primary border border-slate-200" placeholder="••••••••" required type="password" />
+            <button class="absolute right-3 text-on-surface-variant hover:text-on-surface" onclick="window.togglePasswordVisibility('loginPasswordInput', 'pwToggleIcon')" type="button" aria-label="Toggle password visibility">
+              <span class="material-symbols-outlined text-[20px]" id="pwToggleIcon">visibility</span>
+            </button>
+          </div>
+        </div>
+
+        <button class="w-full h-12 bg-primary-container hover:bg-primary text-on-primary-container font-label-lg text-label-lg rounded-lg shadow-md transition-colors flex items-center justify-center gap-1 font-bold" type="submit">
+          <span>Sign In to Account</span>
+          <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+        </button>
+      </form>
+
+      <!-- Form 2: Sign Up (Hidden initially) -->
+      <form class="space-y-space-md hidden" id="authSignupForm" onsubmit="window.handleSignup(event)">
+        <div>
+          <label for="signupEmailInput" class="block font-label-sm text-label-sm text-on-surface-variant mb-1 font-semibold uppercase">Email Address</label>
+          <div class="relative flex items-center">
+            <span class="material-symbols-outlined absolute left-3 text-on-surface-variant text-[20px] pointer-events-none">mail</span>
+            <input id="signupEmailInput" class="w-full h-11 pl-10 pr-4 bg-surface-container-low text-on-surface font-body-md text-body-md rounded-lg focus:outline-none focus:ring-2 focus:ring-primary border border-slate-200" placeholder="newdonor@domain.org" required type="email" />
+          </div>
+        </div>
+
+        <div>
+          <label for="signupPasswordInput" class="block font-label-sm text-label-sm text-on-surface-variant mb-1 font-semibold uppercase">Password (min 6 chars)</label>
+          <div class="relative flex items-center">
+            <span class="material-symbols-outlined absolute left-3 text-on-surface-variant text-[20px] pointer-events-none">key</span>
+            <input id="signupPasswordInput" class="w-full h-11 pl-10 pr-10 bg-surface-container-low text-on-surface font-body-md text-body-md rounded-lg focus:outline-none focus:ring-2 focus:ring-primary border border-slate-200" placeholder="Create password" required type="password" minlength="6" />
+            <button class="absolute right-3 text-on-surface-variant hover:text-on-surface" onclick="window.togglePasswordVisibility('signupPasswordInput', 'signupPwIcon')" type="button" aria-label="Toggle password visibility">
+              <span class="material-symbols-outlined text-[20px]" id="signupPwIcon">visibility</span>
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <label for="signupConfirmPasswordInput" class="block font-label-sm text-label-sm text-on-surface-variant mb-1 font-semibold uppercase">Confirm Password</label>
+          <div class="relative flex items-center">
+            <span class="material-symbols-outlined absolute left-3 text-on-surface-variant text-[20px] pointer-events-none">lock_reset</span>
+            <input id="signupConfirmPasswordInput" class="w-full h-11 pl-10 pr-4 bg-surface-container-low text-on-surface font-body-md text-body-md rounded-lg focus:outline-none focus:ring-2 focus:ring-primary border border-slate-200" placeholder="Re-enter password" required type="password" minlength="6" />
+          </div>
+        </div>
+
+        <button class="w-full h-12 bg-primary-container hover:bg-primary text-on-primary-container font-label-lg text-label-lg rounded-lg shadow-md transition-colors flex items-center justify-center gap-1 font-bold" type="submit">
+          <span>Create Donor Account</span>
+          <span class="material-symbols-outlined text-[18px]">person_add</span>
+        </button>
+      </form>
+
+      <!-- Footer prompt -->
+      <div class="mt-space-md pt-space-md border-t border-slate-200 text-center">
+        <p class="font-body-sm text-body-sm text-on-surface-variant text-slate-500">
+          Want to become an active donor?
+          <button class="text-primary font-bold hover:underline ml-1" onclick="window.closeModal('authModal'); window.openModal('registerModal');">
+            Register as a Lifesaving Donor
+          </button>
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       Interactive Modal 3: Donor Profile & Availability Management
+       ======================================================================== -->
+  <div id="profileModal" class="modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4 bg-inverse-surface/60 backdrop-blur-sm hidden">
+    <div class="modal-content w-full max-w-lg bg-surface-container-lowest rounded-2xl shadow-2xl p-space-lg md:p-space-xl relative border border-slate-200">
+      
+      <!-- Close Button -->
+      <button class="absolute top-4 right-4 w-9 h-9 rounded-full bg-surface-container hover:bg-surface-container-high flex items-center justify-center text-on-surface transition-colors" onclick="window.closeModal('profileModal')" aria-label="Close Modal">
+        <span class="material-symbols-outlined text-[20px]">close</span>
+      </button>
+
+      <!-- Header -->
+      <div class="flex items-center gap-space-sm mb-space-md">
+        <div class="w-12 h-12 rounded-xl bg-secondary-fixed flex items-center justify-center text-primary shrink-0">
+          <span class="material-symbols-outlined text-[26px]">manage_accounts</span>
+        </div>
+        <div>
+          <h3 class="font-headline-md text-headline-md text-on-surface font-bold">Your Donor Profile</h3>
+          <p id="profileEmailDisplay" class="font-body-sm text-body-sm text-slate-500 font-medium">user@example.com</p>
+        </div>
+      </div>
+
+      <!-- Realtime Availability Toggle Box (Requirement 5) -->
+      <div class="p-4 rounded-xl bg-emerald-50 border border-emerald-200 mb-space-md flex items-center justify-between">
+        <div>
+          <div class="flex items-center gap-1.5 font-bold text-slate-800 text-sm">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span>Live Availability Status</span>
+          </div>
+          <p class="text-xs text-slate-600 mt-0.5">Toggle to immediately show/hide yourself in emergency searches</p>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="profileAvailToggle" checked onchange="window.toggleCurrentDonorAvailability(this.checked)">
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <!-- Edit Profile Form -->
+      <form class="space-y-space-sm" onsubmit="window.handleSaveProfile(event)">
+        <div>
+          <label for="profileNameInput" class="block text-xs font-semibold uppercase text-slate-500 mb-1">Full Name</label>
+          <input id="profileNameInput" class="w-full h-10 px-3 bg-slate-50 rounded-lg border border-slate-200 text-sm" required type="text" placeholder="Your name" />
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label for="profileBloodSelect" class="block text-xs font-semibold uppercase text-slate-500 mb-1">Blood Group</label>
+            <select id="profileBloodSelect" class="w-full h-10 px-3 bg-slate-50 rounded-lg border border-slate-200 text-sm font-bold">
+              <option value="O+">O+</option>
+              <option value="O-">O-</option>
+              <option value="A+">A+</option>
+              <option value="A-">A-</option>
+              <option value="B+">B+</option>
+              <option value="B-">B-</option>
+              <option value="AB+">AB+</option>
+              <option value="AB-">AB-</option>
+            </select>
+          </div>
+          <div>
+            <label for="profileCityInput" class="block text-xs font-semibold uppercase text-slate-500 mb-1">City / Hospital Area</label>
+            <input id="profileCityInput" class="w-full h-10 px-3 bg-slate-50 rounded-lg border border-slate-200 text-sm" required type="text" placeholder="City, Area" />
+          </div>
+        </div>
+
+        <div>
+          <label for="profilePhoneInput" class="block text-xs font-semibold uppercase text-slate-500 mb-1">Phone Number</label>
+          <input id="profilePhoneInput" class="w-full h-10 px-3 bg-slate-50 rounded-lg border border-slate-200 text-sm" required type="tel" placeholder="+1 (555) 000-0000" />
+        </div>
+
+        <div class="pt-2 flex items-center gap-2">
+          <button type="submit" class="flex-1 h-11 bg-primary text-white rounded-lg font-bold text-sm hover:bg-primary-hover transition-colors shadow-sm flex items-center justify-center gap-1.5">
+            <span class="material-symbols-outlined text-[18px]">save</span>
+            <span>Update Profile in Firestore</span>
+          </button>
+          <button type="button" class="px-4 h-11 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-100 text-sm font-medium" onclick="window.closeModal('profileModal')">
+            Cancel
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       Interactive Modal 4: Quick Contact Modal
+       ======================================================================== -->
+  <div id="contactModal" class="modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4 bg-inverse-surface/60 backdrop-blur-sm hidden">
+    <div class="modal-content w-full max-w-sm bg-surface-container-lowest rounded-2xl shadow-2xl p-space-lg relative text-center border border-slate-200">
+      
+      <!-- Close Button -->
+      <button class="absolute top-4 right-4 w-8 h-8 rounded-full bg-surface-container hover:bg-surface-container-high flex items-center justify-center text-on-surface transition-colors" onclick="window.closeModal('contactModal')" aria-label="Close Modal">
+        <span class="material-symbols-outlined text-[18px]">close</span>
+      </button>
+
+      <div class="w-14 h-14 rounded-full bg-secondary-fixed mx-auto mb-space-sm flex items-center justify-center text-primary font-headline-md font-bold" id="detailBloodGroup">
+        O+
+      </div>
+      <h3 class="font-headline-sm text-headline-sm text-on-surface font-bold" id="detailDonorName">David Vance</h3>
+      <p class="font-body-sm text-body-sm text-on-surface-variant text-slate-500" id="detailDonorLoc">Brooklyn, New York</p>
+
+      <div class="my-space-md p-space-sm rounded-lg bg-surface-container-low text-left border border-slate-200">
+        <div class="flex items-center justify-between py-1">
+          <span class="font-label-sm text-label-sm text-on-surface-variant text-slate-500">Clinical Verification:</span>
+          <span class="font-label-sm text-label-sm text-tertiary-container font-bold flex items-center gap-0.5">
+            <span class="material-symbols-outlined text-[14px]">verified</span> Approved
+          </span>
+        </div>
+        <div class="flex items-center justify-between py-1">
+          <span class="font-label-sm text-label-sm text-on-surface-variant text-slate-500">History:</span>
+          <span class="font-label-sm text-label-sm text-on-surface font-semibold" id="detailDonorStats">8 donations</span>
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-space-xs">
+        <a id="detailCallLink" class="w-full h-11 bg-primary text-on-primary font-label-lg text-label-lg rounded-lg flex items-center justify-center gap-2 hover:bg-primary-hover transition-colors shadow-sm font-semibold" href="tel:+15552345678">
+          <span class="material-symbols-outlined text-[20px]">phone</span>
+          <span>Call Directly</span>
+        </a>
+        <a id="detailSmsLink" class="w-full h-11 bg-surface-container hover:bg-surface-container-high text-on-surface font-label-lg text-label-lg rounded-lg flex items-center justify-center gap-2 transition-colors font-medium border border-slate-200" href="sms:+15552345678">
+          <span class="material-symbols-outlined text-[20px]">chat</span>
+          <span>Send SMS Message</span>
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       Interactive Modal 5: Blood Banks Directory Modal
+       ======================================================================== -->
+  <div id="bloodBanksModal" class="modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4 bg-inverse-surface/60 backdrop-blur-sm hidden">
+    <div class="modal-content w-full max-w-xl bg-surface-container-lowest rounded-2xl shadow-2xl p-space-lg md:p-space-xl relative max-h-[85vh] overflow-y-auto border border-slate-200">
+      <button class="absolute top-4 right-4 w-9 h-9 rounded-full bg-surface-container hover:bg-surface-container-high flex items-center justify-center text-on-surface" onclick="window.closeModal('bloodBanksModal')">
+        <span class="material-symbols-outlined text-[20px]">close</span>
+      </button>
+
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-xl bg-red-100 flex items-center justify-center text-primary font-bold">
+          <span class="material-symbols-outlined text-[24px]">local_hospital</span>
+        </div>
+        <div>
+          <h3 class="text-xl font-bold text-on-surface">Regional Blood Banks Directory</h3>
+          <p class="text-xs text-slate-500">Verified hospitals and regional collection centers</p>
+        </div>
+      </div>
+
+      <div class="space-y-3">
+        <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+          <div>
+            <h4 class="font-bold text-sm text-slate-800">New York Blood Center (HQ)</h4>
+            <p class="text-xs text-slate-500">310 E 67th St, New York, NY 10065 • 24/7 Receiving</p>
+          </div>
+          <a href="tel:+18009332566" class="px-3 py-1.5 rounded-lg bg-primary text-white text-xs font-bold flex items-center gap-1">
+            <span class="material-symbols-outlined text-[14px]">call</span> Call Center
+          </a>
+        </div>
+
+        <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+          <div>
+            <h4 class="font-bold text-sm text-slate-800">American Red Cross Greater NY</h4>
+            <p class="text-xs text-slate-500">520 W 49th St, New York, NY 10019 • Priority Trauma Unit</p>
+          </div>
+          <a href="tel:+18777332767" class="px-3 py-1.5 rounded-lg bg-primary text-white text-xs font-bold flex items-center gap-1">
+            <span class="material-symbols-outlined text-[14px]">call</span> Call Center
+          </a>
+        </div>
+
+        <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+          <div>
+            <h4 class="font-bold text-sm text-slate-800">Mount Sinai Hospital Transfusion Service</h4>
+            <p class="text-xs text-slate-500">1468 Madison Ave, New York, NY 10029 • Emergency Triage</p>
+          </div>
+          <a href="tel:+12122416500" class="px-3 py-1.5 rounded-lg bg-primary text-white text-xs font-bold flex items-center gap-1">
+            <span class="material-symbols-outlined text-[14px]">call</span> Call Center
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       Interactive Modal 6: Emergency Requests Modal
+       ======================================================================== -->
+  <div id="emergencyModal" class="modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4 bg-inverse-surface/60 backdrop-blur-sm hidden">
+    <div class="modal-content w-full max-w-lg bg-surface-container-lowest rounded-2xl shadow-2xl p-space-lg md:p-space-xl relative border border-slate-200">
+      <button class="absolute top-4 right-4 w-9 h-9 rounded-full bg-surface-container hover:bg-surface-container-high flex items-center justify-center text-on-surface" onclick="window.closeModal('emergencyModal')">
+        <span class="material-symbols-outlined text-[20px]">close</span>
+      </button>
+
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-xl bg-red-600 flex items-center justify-center text-white font-bold">
+          <span class="material-symbols-outlined text-[24px]">emergency</span>
+        </div>
+        <div>
+          <h3 class="text-xl font-bold text-on-surface">Emergency Blood Dispatch</h3>
+          <p class="text-xs text-slate-500">Rapid life-critical protocol for urgent surgical units</p>
+        </div>
+      </div>
+
+      <div class="p-4 rounded-xl bg-red-50 border border-red-200 text-sm text-slate-700 space-y-2 mb-4">
+        <p><strong>Immediate Action Needed:</strong> If you or a hospital requires emergency platelets or rare red cell units, you can directly connect with verified donors in the directory or call the 24/7 helpline.</p>
+        <div class="pt-2 flex items-center gap-3">
+          <a href="tel:18007335433" class="flex-1 py-2.5 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg text-center flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined text-[18px]">phone_in_talk</span>
+            <span>Call 1-800-RED-LIFE</span>
+          </a>
+        </div>
+      </div>
+
+      <button class="w-full py-2.5 rounded-lg bg-slate-100 hover:bg-slate-200 font-bold text-sm text-slate-700" onclick="window.closeModal('emergencyModal')">
+        Close Window
+      </button>
+    </div>
+  </div>
+
+  <!-- Toast Notification Anchor -->
+  <div id="toastContainer"></div>
+
+  <!-- ========================================================================
+       Footer
+       ======================================================================== -->
+  <footer class="w-full bg-surface-container-lowest shadow-[0_-1px_8px_rgba(0,0,0,0.03)] mt-auto border-t border-slate-200/80">
+    <div class="w-full px-gutter py-space-xl max-w-7xl mx-auto">
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-space-lg mb-space-xl">
+        
+        <!-- Column 1: Brand & Protocol -->
+        <div class="flex flex-col gap-space-sm">
+          <div class="flex items-center gap-space-sm">
+            <div class="w-7 h-7 rounded-lg bg-primary flex items-center justify-center text-white">
+              <span class="material-symbols-outlined text-[18px]">water_drop</span>
+            </div>
+            <span class="font-headline-sm text-headline-sm text-on-surface font-bold">Blood Donor Finder</span>
+          </div>
+          <p class="font-body-sm text-body-sm text-on-surface-variant text-slate-600">
+            Rapid life-critical blood connection network connecting verified voluntary donors with clinics, patients, and regional blood banks.
+          </p>
+          <div class="flex items-center gap-space-xs mt-space-sm">
+            <span class="material-symbols-outlined text-tertiary-container text-[20px]">verified</span>
+            <span class="font-label-md text-label-md text-tertiary-container font-semibold">Clinical Verification Protocol v4.2</span>
+          </div>
+        </div>
+
+        <!-- Column 2: 24/7 Helpline -->
+        <div class="flex flex-col gap-space-sm">
+          <span class="font-label-lg text-label-lg text-on-surface font-bold">24/7 Emergency Helpline</span>
+          <p class="font-body-sm text-body-sm text-on-surface-variant text-slate-600">
+            Instant clinical triage and emergency dispatch for critical shortages.
+          </p>
+          <div class="flex items-center gap-space-sm p-space-md rounded-lg bg-error-container/40 border border-red-200">
+            <span class="material-symbols-outlined text-primary text-[24px]">emergency</span>
+            <div>
+              <div class="font-headline-sm text-headline-sm text-primary font-bold">1-800-RED-LIFE</div>
+              <div class="font-label-sm text-label-sm text-on-surface-variant font-medium">Toll-Free • 24/7 Priority Desk</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Column 3: Compatibility Quick Matrix -->
+        <div class="flex flex-col gap-space-sm">
+          <span class="font-label-lg text-label-lg text-on-surface font-bold">Blood Group Compatibility</span>
+          <div class="grid grid-cols-4 gap-space-xs font-label-sm text-label-sm text-center">
+            <div class="p-space-xs bg-surface-container-low rounded border border-slate-200">
+              <span class="font-bold text-primary">O-</span>
+              <div class="text-[10px] text-on-surface-variant">Univ. Donor</div>
+            </div>
+            <div class="p-space-xs bg-surface-container-low rounded border border-slate-200">
+              <span class="font-bold text-primary">AB+</span>
+              <div class="text-[10px] text-on-surface-variant">Univ. Recip</div>
+            </div>
+            <div class="p-space-xs bg-surface-container-low rounded border border-slate-200">
+              <span class="font-bold text-on-surface">A+</span>
+              <div class="text-[10px] text-on-surface-variant">A+, AB+</div>
+            </div>
+            <div class="p-space-xs bg-surface-container-low rounded border border-slate-200">
+              <span class="font-bold text-on-surface">B+</span>
+              <div class="text-[10px] text-on-surface-variant">B+, AB+</div>
+            </div>
+          </div>
+          <p class="font-label-sm text-label-sm text-on-surface-variant mt-space-xs text-slate-500">
+            Universal red cell donors (O-) are critical for trauma response.
+          </p>
+        </div>
+
+        <!-- Column 4: Safety & Compliance -->
+        <div class="flex flex-col gap-space-sm">
+          <span class="font-label-lg text-label-lg text-on-surface font-bold">Safety &amp; Compliance</span>
+          <div class="flex flex-col gap-space-xs text-slate-600">
+            <div class="flex items-center gap-space-xs">
+              <span class="material-symbols-outlined text-tertiary text-[18px]">check_circle</span>
+              <span class="font-body-sm text-body-sm text-on-surface-variant">HIPAA &amp; Health Data Compliant</span>
+            </div>
+            <div class="flex items-center gap-space-xs">
+              <span class="material-symbols-outlined text-tertiary text-[18px]">check_circle</span>
+              <span class="font-body-sm text-body-sm text-on-surface-variant">Verified Medical ID Screened</span>
+            </div>
+            <div class="flex items-center gap-space-xs">
+              <span class="material-symbols-outlined text-tertiary text-[18px]">check_circle</span>
+              <span class="font-body-sm text-body-sm text-on-surface-variant">Cold Chain Tracking Partners</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Legal Disclaimer & Copyright -->
+      <div class="pt-space-lg border-t border-slate-200 flex flex-col md:flex-row items-center justify-between gap-space-md">
+        <p class="font-body-sm text-body-sm text-on-surface-variant max-w-2xl text-slate-500">
+          <strong class="text-on-surface">Medical Disclaimer:</strong> This portal matches voluntary donors with certified healthcare institutions and urgent patients. In critical life-threatening situations, call local emergency services (911) immediately.
+        </p>
+        <div class="flex items-center gap-space-md text-slate-500 text-xs">
+          <span>&copy; 2025 Blood Donor Finder. All rights reserved.</span>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- Application Logic Module -->
+  <script type="module" src="/app.js"></script>
+</body>
+</html>
